@@ -3,7 +3,7 @@ const app = require('../src/app');
 const helpers = require('./test-helpers');
 const supertest = require('supertest');
 
-describe.skip('Things Endpoints', function() {
+describe('Things Endpoints', function() {
   let db;
 
   const {
@@ -116,13 +116,14 @@ describe.skip('Things Endpoints', function() {
 
         return supertest(app)
           .get(`/api/things/${thingId}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, expectedThing);
       });
     });
 
     context('Given an XSS attack thing', () => {
       const testUser = helpers.makeUsersArray()[1];
-      const {
+      const { 
         maliciousThing,
         expectedThing,
       } = helpers.makeMaliciousThing(testUser);
@@ -138,6 +139,7 @@ describe.skip('Things Endpoints', function() {
       it('removes XSS attack content', () => {
         return supertest(app)
           .get(`/api/things/${maliciousThing.id}`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[1]))
           .expect(200)
           .expect(res => {
             expect(res.body.title).to.eql(expectedThing.title);
@@ -153,6 +155,7 @@ describe.skip('Things Endpoints', function() {
         const thingId = 123456;
         return supertest(app)
           .get(`/api/things/${thingId}/reviews`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(404, { error: 'Thing doesn\'t exist' });
       });
     });
@@ -175,6 +178,7 @@ describe.skip('Things Endpoints', function() {
 
         return supertest(app)
           .get(`/api/things/${thingId}/reviews`)
+          .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(200, expectedReviews);
       });
     });

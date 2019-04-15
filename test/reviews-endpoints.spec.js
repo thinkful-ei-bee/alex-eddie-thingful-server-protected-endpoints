@@ -302,7 +302,7 @@ describe('Reviews Endpoints', function() {
       it('responds with 404', () => {
         const thingId = 123456;
         return supertest(app)
-          .get(`/api/things/${thingId}/comments`)
+          .get(`/api/things/${thingId}/reviews`)
           .set('Authorization', helpers.makeAuthHeader(testUsers[0]))
           .expect(404, { error: 'Thing doesn\'t exist' });
       });
