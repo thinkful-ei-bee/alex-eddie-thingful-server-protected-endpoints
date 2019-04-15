@@ -37,6 +37,7 @@ thingsRouter.route('/:thing_id/reviews/')
 
 /* async/await syntax for promises */
 async function checkThingExists(req, res, next) {
+  console.log('checking if thing exists',req.params.thing_id);
   try {
     const thing = await ThingsService.getById(
       req.app.get('db'),
@@ -50,6 +51,7 @@ async function checkThingExists(req, res, next) {
     res.thing = thing;
     next();
   } catch (error) {
+    console.log(error,'error here');
     next(error);
   }
 }

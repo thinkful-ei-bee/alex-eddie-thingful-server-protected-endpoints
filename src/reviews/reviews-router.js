@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const path = require('path');
 const ReviewsService = require('./reviews-service');
@@ -9,20 +10,16 @@ const jsonBodyParser = express.json();
 reviewsRouter
   .route('/')
   .post(requireAuth,jsonBodyParser, (req, res, next) => {
-    const { thing_id, rating, text } = req.body;
-    console.log(req);
-    const newReview = { thing_id, rating, text };
+    const { thing_id, rating, text, user_id } = req.body;
+    
+    const newReview = { thing_id, rating, text,user_id };
     for (const [key, value] of Object.entries(newReview)){
-      console.log(key);
-      if (value === null){
-        console.log(value);
+      if (value === undefined){
         return res.status(400).json({
           error: `Missing '${key}' in request body`
         });
-      }
-        
+      }   
     }
-      
 
     newReview.user_id = req.user.id;
 
